@@ -1,0 +1,155 @@
+{
+    "1009803_DOM_22_05_17.pdf": [
+        {
+            "entity_group": "ProcedimentoMedico",
+            "score": "0.7844144",
+            "word": "Polissonográfico",
+            "start": "20",
+            "end": "37"
+        },
+        {
+            "entity_group": "Diagnostico",
+            "score": "0.80096567",
+            "word": "SíndromedeApneia/Hipopneia ObstrutivadoSonodegrauligeiro",
+            "start": "64",
+            "end": "128"
+        },
+        {
+            "entity_group": "Diagnostico",
+            "score": "0.70892763",
+            "word": "roncopatia.",
+            "start": "140",
+            "end": "152"
+        }
+    ],
+    "116_alice.pdf": [
+        {
+            "entity_group": "ProcedimentoMedico",
+            "score": "0.6974354",
+            "word": "Polissonografia",
+            "start": "41",
+            "end": "57"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.48882478",
+            "word": "IAH",
+            "start": "818",
+            "end": "822"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.6693902",
+            "word": "desaturação",
+            "start": "904",
+            "end": "917"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.72048336",
+            "word": "saturaçãodeoxigéniomédia",
+            "start": "949",
+            "end": "977"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.816218",
+            "word": "índicededessaturação",
+            "start": "1003",
+            "end": "1026"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.5125206",
+            "word": "tempo",
+            "start": "1045",
+            "end": "1051"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.7737802",
+            "word": "arterial:",
+            "start": "1355",
+            "end": "1365"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.4707239",
+            "word": "IMC:",
+            "start": "1482",
+            "end": "1487"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.60938686",
+            "word": "Perímetrocervical:",
+            "start": "1493",
+            "end": "1513"
+        },
+        {
+            "entity_group": "Diagnostico",
+            "score": "0.8788574",
+            "word": "SíndromedeApne",
+            "start": "1586",
+            "end": "1603"
+        }
+    ],
+    "159.pdf": [
+        {
+            "entity_group": "ProcedimentoMedico",
+            "score": "0.7193901",
+            "word": "Polissonografia",
+            "start": "8",
+            "end": "24"
+        },
+        {
+            "entity_group": "ProcedimentoMedico",
+            "score": "0.3552572",
+            "word": "hipnograma,",
+            "start": "185",
+            "end": "197"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.3941767",
+            "word": "IAH",
+            "start": "996",
+            "end": "1000"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.76459455",
+            "word": "saturaçãodeO2",
+            "start": "1031",
+            "end": "1047"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.7049568",
+            "word": "índicededessaturação",
+            "start": "1079",
+            "end": "1101"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.7403786",
+            "word": "SpO2média",
+            "start": "1119",
+            "end": "1130"
+        },
+        {
+            "entity_group": "SinalVital",
+            "score": "0.609739",
+            "word": "SpO2<90%",
+            "start": "1173",
+            "end": "1182"
+        },
+        {
+            "entity_group": "Diagnostico",
+            "score": "0.8996088",
+            "word": "SíndromedeApneia/HipopneiaObstrutiva doSonoLigeiro",
+            "start": "1439",
+            "end": "1496"
+        }
+    ]
+}
