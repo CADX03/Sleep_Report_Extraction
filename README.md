@@ -1,93 +1,119 @@
-# SleepReportExtraction
+# Sleep Report Extraction
 
+Automatically extract structured data from sleep study PDF reports and visualize results using a Dash web application.
 
+This repository contains tools to parse various types of sleep study reports (e.g., Alice Sleepware reports, short reports, REM Logic polysomnography and polygraphy reports), export structured data to JSON and CSV, perform simple exploratory analysis, and run a Dash UI for visualization and further analysis.
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## ✅ Features
+- Parse and extract structured fields from different sleep report PDF formats:
+	- Alice Sleepware reports
+	- Short reports
+	- REMLogic Polysomnography and Polygraphy reports
+- Export per-report JSON files and a combined CSV summary (`data/jsons`, `data/csvs/report_summary.csv`).
+- Dash-based web UI to upload PDFs, visualize summary stats, and view each report details.
+- Basic Named Entity Recognition on medical comments using a pre-trained Portuguese NER model (Hugging Face pipeline) and save entities to `src/entities.json`.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+## 🧭 Quickstart
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Prerequisites: Python 3.10+ recommended, Windows example below using PowerShell. The repository includes a `requirements.txt` file listing the dependencies.
 
+1) Create a virtual environment and install requirements
+
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
 ```
-cd existing_repo
-git remote add origin https://gitlab.inesctec.pt/nrsg/sleepreportextraction.git
-git branch -M main
-git push -uf origin main
+
+2) Provide input PDFs
+- Place the sleep study PDF files you want to parse into `data/pdfs/input`. The `data/` directory contains: `pdfs/`, `jsons/`, `csvs/`.
+
+3) CLI extraction (process all PDFs in `data/pdfs/input` and write outputs)
+
+```powershell
+python src\data_extraction.py
 ```
 
-## Integrate with your tools
+This will produce individual JSON files for each report in `data/jsons` and a combined CSV `data/csvs/report_summary.csv`.
 
-- [ ] [Set up project integrations](https://gitlab.inesctec.pt/nrsg/sleepreportextraction/-/settings/integrations)
+4) Run the Dash web app (interactive)
 
-## Collaborate with your team
+```powershell
+python src\app.py
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Open http://127.0.0.1:8050/ or the localhost URL printed out to upload PDFs via the web UI, process them and visualize results.
 
-## Test and Deploy
+---
 
-Use the built-in continuous integration in GitLab.
+## 🔍 Repository structure
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Main folders:
+- `data/` – Input PDFs and output JSONs/CSVs. Contains `pdfs/input`, `jsons`, `csvs`.
+- `src/` – Source code and Dash app.
+	- `alice_report_extraction.py` – Parser for Alice Sleepware reports.
+	- `short_report_extraction.py` – Parser for Acquisition/Short Reports.
+	- `readRemFile.py` / `readRemPolyFile.py` – Parsers for REMLogic Polysomnography and Polygraphy.
+	- `data_extraction.py` – Main CLI file that detects the report type and exports JSON/CSV.
+	- `app.py` – Dash web application entry point (uploads + visualization).
+	- `callbacks/`, `layouts/`, `assets/` – Dash UI components and callbacks.
+	- `utils.py` – Helper functions used by the different parsers.
 
-***
+---
 
-# Editing this README
+## 📝 How it works / parsing strategy
+- For each PDF, `data_extraction.extract_info_from_pdfs()` opens the PDF using `pdfplumber` and checks the first page's contents to guess the report format (e.g. first word is "Alice", or presence of "short report", "polysomnography", "polygraphy").
+- Then the appropriate handler runs and extracts fields using a mix of table extraction and regular expressions.
+- Exported data is normalized to JSON and concatenated into a summary CSV using pandas.
+- The Dash app allows uploading PDFs and performs the same extraction on uploaded files. Uploaded PDFs are temporarily saved to `data/pdfs/input`, processed, and removed after processing.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+---
 
-## Suggestions for a good README
+## 🛠️ Adding support for new report types
+1. Add a new parser in `src/` (e.g., `my_format_parser.py`) that provides a function `handle_my_format(pdf)` which returns a dict with keys and extracted values.
+2. Update `src/data_extraction.py` to call the new parser from `extract_info_from_pdfs()` when the format detection matches your file type.
+3. Optionally add frontend adjustments (layout or categories) in `src/callbacks/utils.py` if you need to display new fields.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+---
 
-## Name
-Choose a self-explaining name for your project.
+## ⚠️ Notes & troubleshooting
+- These parsers rely on heuristics and specific PDF layouts; they will not be 100% accurate for all sources or new versions of report templates.
+- Text extraction may vary depending on the PDF renderer—`pdfplumber` is used (pdfminer underneath). If the text/tables are not extracted correctly, the parser may fail or return incomplete output.
+- The Hugging Face NER model used for comment analysis is `portugueseNLP/medialbertina_pt-pt_900m_NER` — this is downloaded dynamically the first time you run the app, so allow some time during the first run and make sure you have internet access.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+---
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## 🧪 Tests
+There are no dedicated unit tests in this repository yet. If you want to add tests, the parsers can be tested against sample PDFs placed into `data/pdfs/input` using a small test harness that calls `data_extraction.py` or the handler functions directly.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+---
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## 🤝 Contributing
+If you'd like to help, please:
+- Fork the repository
+- Add your feature, bug fix, or tests in a separate branch
+- Open a pull request with a description of your changes and example PDFs for the new parser (if applicable)
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Consider contributing a sample PDF for each parser you're enhancing (no patient-identifying info).
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+---
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## 🔒 Data & privacy
+- Uploaded PDFs and generated intermediate files are processed locally and removed after processing (see `file_upload_callbacks.py` where files are deleted after extraction).
+- This repository does not include de-identification steps — if you plan to share or upload reports with PHI, please anonymize the data first.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+---
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## 📄 License
+No license file is included at the moment. If this project should be open source, consider adding a `LICENSE` (for example, `MIT`) to the root of this repository.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+---
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## 👥 Authors & Acknowledgments
+This project was created to help automate the extraction of structured information from clinical sleep study reports. Thanks to the maintainers of `pdfplumber`, `pandas`, `Dash`, and the Hugging Face ecosystem used in the project.
 
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
